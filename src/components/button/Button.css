@@ -1,0 +1,15 @@
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    width: 500px;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+}
+
+.button {
+    border: 1px solid blue;
+    height: 30px;
+    margin: 5px;
+}
