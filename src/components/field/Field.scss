@@ -3,15 +3,15 @@
     flex-wrap: wrap;
     width: 400px;
     margin: auto;
-    
 }
 
 .box {
     border: 1px solid grey;
     width: 18px;
     height: 18px;
+    &-color {
+        background-color: rgba(38, 235, 21, 0.932);
+    }
 }
 
-.box-color {
-    background-color: rgba(38, 235, 21, 0.932);
-}
+
