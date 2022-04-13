@@ -7,16 +7,16 @@ import { useMemo } from 'react';
 function App() {
     const _NUMBERS_FIELD = 20;
     let liveBoxMap = {};
-    let liveBoxArr;
+    let liveBoxArr = Init(_NUMBERS_FIELD);
     const [stateGame, setStateGame] = useState(false);
 
     const startGame = () => {
         setStateGame(!stateGame);
     }
 
-    useEffect(() => {
-        liveBoxArr = Init(_NUMBERS_FIELD);
-    }, []);
+    // useEffect(() => {
+    //     liveBoxArr = Init(_NUMBERS_FIELD);
+    // }, []);
 
     const getLiveBoxMap = useMemo(() => {
         return liveBoxMap;
