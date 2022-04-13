@@ -1,15 +1,23 @@
-
-import "./Buttons.css"
+import { useEffect, useState } from "react";
+import "./Buttons.scss"
 
 const Buttons = (props) => {
-    
-    
+    const {runGame, startGame, nextStep} = props;
+    const [stateRunButton, setStateRunButton] = useState("Start game");
+
+    useEffect(() => {
+        if (runGame)
+            setStateRunButton("Stop game");
+        else
+            setStateRunButton("Start game");    
+    }, [runGame]);
+
     return (
         <div className="buttons">
-            <button className="button" onClick={props.startGame}>{props.descButtons[0]}</button>
-            <button className="button" >{props.descButtons[1]}</button>
-            <button className="button" >{props.descButtons[2]}</button>
-            <button className="button" >{props.descButtons[3]}</button>
+            <button className="button" onClick={startGame}>{stateRunButton}</button>
+            <button className="button" onClick={nextStep}>Next step</button>
+            <button className="button" disabled={runGame}>Random game</button>
+            <button className="button" disabled={runGame}>Clear field</button>
         </div>
     )
 }
