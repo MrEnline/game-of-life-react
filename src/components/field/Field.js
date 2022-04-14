@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import "./Field.scss"
 
 const Field = (props) => {
@@ -9,14 +9,19 @@ const Field = (props) => {
                     numbersField={props.numbersField} 
                     setStateBoxArr={props.setStateBoxArr}
                     getLiveBoxMap={props.getLiveBoxMap}
-                    getLiveBoxArr={props.getLiveBoxArr}/>
+                    getLiveBoxArr={props.getLiveBoxArr}
+                    getRefsBox={props.getRefsBox}/>
         </div>
     );
 }
 
-const ViewBox = ({runGame, numbersField, setStateBoxArr, getLiveBoxMap, getLiveBoxArr}) => {
+const ViewBox = ({runGame, numbersField, setStateBoxArr, getLiveBoxMap, getLiveBoxArr, getRefsBox}) => {
     
     const itemRefs = useRef([]);
+
+    useEffect(() => {
+        getRefsBox(itemRefs);
+    }, []);
 
     const generateField = () => {
         console.log("generateField");
@@ -24,9 +29,9 @@ const ViewBox = ({runGame, numbersField, setStateBoxArr, getLiveBoxMap, getLiveB
         for (let i = 1; i <= numbersField; i++) {
             for(let j = 1; j <= numbersField; j++){
                 arrItems.push(<div className="box"
-                                        data-xy={i.toString() + "_" + j.toString()}
-                                        onClick={() => changeBackgroundColor(i.toString() + "_" + j.toString())}
-                                        ref={el => itemRefs.current[i.toString() + "_" + j.toString()] = el}>
+                                    data-xy={i.toString() + "_" + j.toString()}
+                                    onClick={() => changeBackgroundColor(i.toString() + "_" + j.toString())}
+                                    ref={el => itemRefs.current[i.toString() + "_" + j.toString()] = el}>
                               </div>)
             }
         }
@@ -35,11 +40,15 @@ const ViewBox = ({runGame, numbersField, setStateBoxArr, getLiveBoxMap, getLiveB
 
     const changeBackgroundColor = (id) => {
         const liveBoxXY = getLiveBoxMap;
-        const liveBoxXY1 = getLiveBoxArr;
+        const liveBoxArr = getLiveBoxArr;
         if (!runGame) {
             itemRefs.current[id].classList.toggle("box-color");
             liveBoxXY[id] = !liveBoxXY[id];
-            setStateBoxArr(liveBoxXY, id);
+            const Y = id.split("_")[0];
+            const X = id.split("_")[1];
+            const value = Number(liveBoxXY[id]);
+            liveBoxArr[Y][X] = value;
+            //setStateBoxArr(liveBoxXY, id);
             if (!liveBoxXY[id])
                 delete liveBoxXY[id];  
         }

@@ -1,21 +1,31 @@
 import Field from '../field/Field'
 import Buttons from '../buttons/Buttons'
-import Init from '../../utils/Init';
-import { useState, useEffect } from "react";
-import { useMemo } from 'react';
+import {initField} from '../../utils/InitField';
+import { useState, useEffect, useMemo } from "react";
+import {runNextStep} from '..//../utils/RunNextStep';
 
 function App() {
-    const _NUMBERS_FIELD = 20;
-    let liveBoxMap = {};
-    let liveBoxArr = Init(_NUMBERS_FIELD);
+    const {liveBoxMap, liveBoxArr, getNumberField} = initField();
+    let itemRefs = initField().itemRefs;
     const [stateGame, setStateGame] = useState(false);
+    //const [liveBoxArr, setLiveBoxArr] = useState(initArrDefaultValue());
 
     const startGame = () => {
         setStateGame(!stateGame);
     }
 
+    const nextStep = () => {
+        const _liveBoxArr = getLiveBoxArr;
+        const _liveBoxMap = getLiveBoxMap;
+        const _itemRefs = getItemRefs;
+        if (stateGame)
+            runNextStep(_liveBoxArr, _liveBoxMap, _itemRefs);
+    }
+
     // useEffect(() => {
-    //     liveBoxArr = Init(_NUMBERS_FIELD);
+    //     //liveBoxArr = Init(_NUMBERS_FIELD);
+    //     //testFunc();
+    //     itemRefs = initField().itemRefs;
     // }, []);
 
     const getLiveBoxMap = useMemo(() => {
@@ -26,26 +36,40 @@ function App() {
         return liveBoxArr;
     }, []);
 
+    const getItemRefs = useMemo(() => {
+        return itemRefs;
+    }, []);
+
     const setStateBoxArr = (liveBoxXY, id) => {
         const Y = id.split("_")[0];
         const X = id.split("_")[1];
         const value = Number(liveBoxXY[id]);
-        liveBoxArr[Y][X] = value;
-        console.log(liveBoxMap);
+        const _liveBoxArr = getLiveBoxArr;
+        _liveBoxArr[Y][X] = value;
+        //console.log(initArrDefaultValue);
         // if (value)
         //     liveBoxMap[id] = value;
         // else
         //     delete liveBoxMap[id];    
     }
 
+    const getRefsBox = (_itemRefs) => {
+        //console.log(itemRefs.current);
+        itemRefs = _itemRefs.current;
+        //itemRefs.current["1_1"].classList.toggle("box-color");
+    }
+
+    const numberField = getNumberField();
+
     return (
         <div className="App">
-            <Buttons runGame={stateGame} startGame={startGame}/>
-            <Field numbersField={_NUMBERS_FIELD}
+            <Buttons runGame={stateGame} startGame={startGame} nextStep={nextStep}/>
+            <Field numbersField={numberField}
                     setStateBoxArr={setStateBoxArr}
                     runGame={stateGame}
                     getLiveBoxMap={getLiveBoxMap}
-                    getLiveBoxArr={getLiveBoxArr}/>
+                    getLiveBoxArr={getLiveBoxArr}
+                    getRefsBox={getRefsBox}/>
         </div>
     );
 }
