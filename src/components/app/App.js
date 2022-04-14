@@ -6,7 +6,7 @@ import {runNextStep} from '..//../utils/RunNextStep';
 
 function App() {
     const {liveBoxMap, liveBoxArr, getNumberField} = initField();
-    let itemRefs = initField().itemRefs;
+    let itemRefs;
     const [stateGame, setStateGame] = useState(false);
     //const [liveBoxArr, setLiveBoxArr] = useState(initArrDefaultValue());
 
@@ -17,9 +17,9 @@ function App() {
     const nextStep = () => {
         const _liveBoxArr = getLiveBoxArr;
         const _liveBoxMap = getLiveBoxMap;
-        const _itemRefs = getItemRefs;
+        //const _itemRefs = getItemRefs;
         if (stateGame)
-            runNextStep(_liveBoxArr, _liveBoxMap, _itemRefs);
+            runNextStep(_liveBoxArr, _liveBoxMap, itemRefs);
     }
 
     // useEffect(() => {
@@ -36,9 +36,9 @@ function App() {
         return liveBoxArr;
     }, []);
 
-    const getItemRefs = useMemo(() => {
-        return itemRefs;
-    }, []);
+    // const getItemRefs = useMemo(() => {
+    //     return itemRefs;
+    // }, []);
 
     const setStateBoxArr = (liveBoxXY, id) => {
         const Y = id.split("_")[0];
@@ -55,7 +55,8 @@ function App() {
 
     const getRefsBox = (_itemRefs) => {
         //console.log(itemRefs.current);
-        itemRefs = _itemRefs.current;
+        itemRefs = _itemRefs;
+        
         //itemRefs.current["1_1"].classList.toggle("box-color");
     }
 

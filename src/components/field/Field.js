@@ -20,7 +20,7 @@ const ViewBox = ({runGame, numbersField, setStateBoxArr, getLiveBoxMap, getLiveB
     const itemRefs = useRef([]);
 
     useEffect(() => {
-        getRefsBox(itemRefs);
+        getRefsBox(itemRefs.current);
     }, []);
 
     const generateField = () => {
@@ -35,6 +35,8 @@ const ViewBox = ({runGame, numbersField, setStateBoxArr, getLiveBoxMap, getLiveB
                               </div>)
             }
         }
+        if (Object.entries(itemRefs.current).length > 0)
+            getRefsBox(itemRefs.current);
         return (arrItems)
     }
 
