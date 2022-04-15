@@ -19,9 +19,9 @@ const ViewBox = ({runGame, numbersField, setStateBoxArr, getLiveBoxMap, getLiveB
     
     const itemRefs = useRef([]);
 
-    useEffect(() => {
-        getRefsBox(itemRefs.current);
-    }, []);
+    // useEffect(() => {
+    //     getRefsBox(itemRefs.current);
+    // }, []);
 
     const generateField = () => {
         console.log("generateField");
@@ -35,24 +35,25 @@ const ViewBox = ({runGame, numbersField, setStateBoxArr, getLiveBoxMap, getLiveB
                               </div>)
             }
         }
-        if (Object.entries(itemRefs.current).length > 0)
+        // if (Object.entries(itemRefs.current).length > 0)
+        //     getRefsBox(itemRefs.current);
+        if (runGame)
             getRefsBox(itemRefs.current);
         return (arrItems)
     }
 
     const changeBackgroundColor = (id) => {
-        const liveBoxXY = getLiveBoxMap;
+        const liveBoxMap = getLiveBoxMap;
         const liveBoxArr = getLiveBoxArr;
         if (!runGame) {
             itemRefs.current[id].classList.toggle("box-color");
-            liveBoxXY[id] = !liveBoxXY[id];
-            const Y = id.split("_")[0];
-            const X = id.split("_")[1];
-            const value = Number(liveBoxXY[id]);
-            liveBoxArr[Y][X] = value;
+            liveBoxMap[id] = !liveBoxMap[id];
+            const coord = parseCoordinates(id);
+            const value = Number(liveBoxMap[id]);
+            liveBoxArr[coord.x][coord.x] = value;
             //setStateBoxArr(liveBoxXY, id);
-            if (!liveBoxXY[id])
-                delete liveBoxXY[id];  
+            if (!liveBoxMap[id])
+                delete liveBoxMap[id];  
         }
     }
 
@@ -63,6 +64,12 @@ const ViewBox = ({runGame, numbersField, setStateBoxArr, getLiveBoxMap, getLiveB
             {items}
         </>
     )
+}
+
+const parseCoordinates = (xy) => {
+    const x = xy.split("_")[0];
+    const y = xy.split("_")[1];
+    return {x, y};
 }
 
 export default Field;
