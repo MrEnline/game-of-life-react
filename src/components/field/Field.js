@@ -29,9 +29,9 @@ const ViewBox = ({runGame, numbersField, setStateBoxArr, getLiveBoxMap, getLiveB
         for (let i = 1; i <= numbersField; i++) {
             for(let j = 1; j <= numbersField; j++){
                 arrItems.push(<div className="box"
-                                    data-xy={i.toString() + "_" + j.toString()}
-                                    onClick={() => changeBackgroundColor(i.toString() + "_" + j.toString())}
-                                    ref={el => itemRefs.current[i.toString() + "_" + j.toString()] = el}>
+                                    data-xy={`${i}_${j}`}
+                                    onClick={() => changeBackgroundColor(`${i}_${j}`)}
+                                    ref={el => itemRefs.current[`${i}_${j}`] = el}>
                               </div>)
             }
         }
@@ -50,7 +50,7 @@ const ViewBox = ({runGame, numbersField, setStateBoxArr, getLiveBoxMap, getLiveB
             liveBoxMap[id] = !liveBoxMap[id];
             const coord = parseCoordinates(id);
             const value = Number(liveBoxMap[id]);
-            liveBoxArr[coord.x][coord.x] = value;
+            liveBoxArr[coord.y][coord.x] = value;
             //setStateBoxArr(liveBoxXY, id);
             if (!liveBoxMap[id])
                 delete liveBoxMap[id];  
@@ -67,8 +67,8 @@ const ViewBox = ({runGame, numbersField, setStateBoxArr, getLiveBoxMap, getLiveB
 }
 
 const parseCoordinates = (xy) => {
-    const x = xy.split("_")[0];
-    const y = xy.split("_")[1];
+    const y = xy.split("_")[0];
+    const x = xy.split("_")[1];
     return {x, y};
 }
 
