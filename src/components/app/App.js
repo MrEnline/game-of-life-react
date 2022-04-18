@@ -1,32 +1,47 @@
 import Field from '../field/Field'
 import Buttons from '../buttons/Buttons'
 import {initField} from '../../utils/InitField';
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import {runNextStep} from '..//../utils/RunNextStep';
+
+let timerId;
+let itemRefs;
 
 function App() {
     const {liveBoxMap, liveBoxArr, getNumberField} = initField();
-    let itemRefs;
     const [stateGame, setStateGame] = useState(false);
-    //const [liveBoxArr, setLiveBoxArr] = useState(initArrDefaultValue());
 
     const startGame = () => {
         setStateGame(!stateGame);
+        if (!stateGame) {
+            timerId = setInterval(() => {
+                nextStep();     
+            }, 700);
+        }
+        if (stateGame) {
+            clearInterval(timerId);
+        }
     }
 
     const nextStep = () => {
         const _liveBoxArr = getLiveBoxArr;
         const _liveBoxMap = getLiveBoxMap;
-        //const _itemRefs = getItemRefs;
-        if (stateGame)
-            runNextStep(_liveBoxArr, _liveBoxMap, itemRefs);
+        runNextStep(_liveBoxArr, _liveBoxMap, itemRefs);
     }
 
-    // useEffect(() => {
-    //     //liveBoxArr = Init(_NUMBERS_FIELD);
-    //     //testFunc();
-    //     itemRefs = initField().itemRefs;
-    // }, []);
+    const clearField = () => {
+        const _liveBoxArr = getLiveBoxArr;
+        const _liveBoxMap = getLiveBoxMap;
+        const keysLiveBox = Object.keys(_liveBoxMap);
+        if (keysLiveBox.length > 0) {
+            for (const item of keysLiveBox) {
+                _liveBoxArr[item.split("_")[0]][item.split("_")[1]] = 0;
+                if (itemRefs[item].classList.contains("box-color"))
+                    itemRefs[item].classList.remove("box-color");
+                delete _liveBoxMap[item];
+            } 
+        }
+    }
 
     const getLiveBoxMap = useMemo(() => {
         return liveBoxMap;
@@ -36,37 +51,16 @@ function App() {
         return liveBoxArr;
     }, []);
 
-    // const getItemRefs = useMemo(() => {
-    //     return itemRefs;
-    // }, []);
-
-    const setStateBoxArr = (liveBoxXY, id) => {
-        const Y = id.split("_")[0];
-        const X = id.split("_")[1];
-        const value = Number(liveBoxXY[id]);
-        const _liveBoxArr = getLiveBoxArr;
-        _liveBoxArr[Y][X] = value;
-        //console.log(initArrDefaultValue);
-        // if (value)
-        //     liveBoxMap[id] = value;
-        // else
-        //     delete liveBoxMap[id];    
-    }
-
     const getRefsBox = (_itemRefs) => {
-        //console.log(itemRefs.current);
         itemRefs = _itemRefs;
-        
-        //itemRefs.current["1_1"].classList.toggle("box-color");
     }
 
     const numberField = getNumberField();
 
     return (
         <div className="App">
-            <Buttons runGame={stateGame} startGame={startGame} nextStep={nextStep}/>
+            <Buttons runGame={stateGame} startGame={startGame} nextStep={nextStep} clearField={clearField}/>
             <Field numbersField={numberField}
-                    setStateBoxArr={setStateBoxArr}
                     runGame={stateGame}
                     getLiveBoxMap={getLiveBoxMap}
                     getLiveBoxArr={getLiveBoxArr}

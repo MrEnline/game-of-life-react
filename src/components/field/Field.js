@@ -7,7 +7,6 @@ const Field = (props) => {
         <div className="field">
             <ViewBox runGame={props.runGame} 
                     numbersField={props.numbersField} 
-                    setStateBoxArr={props.setStateBoxArr}
                     getLiveBoxMap={props.getLiveBoxMap}
                     getLiveBoxArr={props.getLiveBoxArr}
                     getRefsBox={props.getRefsBox}/>
@@ -15,13 +14,13 @@ const Field = (props) => {
     );
 }
 
-const ViewBox = ({runGame, numbersField, setStateBoxArr, getLiveBoxMap, getLiveBoxArr, getRefsBox}) => {
+const ViewBox = ({runGame, numbersField, getLiveBoxMap, getLiveBoxArr, getRefsBox}) => {
     
     const itemRefs = useRef([]);
 
-    // useEffect(() => {
-    //     getRefsBox(itemRefs.current);
-    // }, []);
+    useEffect(() => {
+        getRefsBox(itemRefs.current);
+    }, []);
 
     const generateField = () => {
         console.log("generateField");
@@ -37,8 +36,8 @@ const ViewBox = ({runGame, numbersField, setStateBoxArr, getLiveBoxMap, getLiveB
         }
         // if (Object.entries(itemRefs.current).length > 0)
         //     getRefsBox(itemRefs.current);
-        if (runGame)
-            getRefsBox(itemRefs.current);
+        // if (runGame)
+        //     getRefsBox(itemRefs.current);
         return (arrItems)
     }
 
@@ -50,8 +49,7 @@ const ViewBox = ({runGame, numbersField, setStateBoxArr, getLiveBoxMap, getLiveB
             liveBoxMap[id] = !liveBoxMap[id];
             const coord = parseCoordinates(id);
             const value = Number(liveBoxMap[id]);
-            liveBoxArr[coord.y][coord.x] = value;
-            //setStateBoxArr(liveBoxXY, id);
+            liveBoxArr[coord.y][coord.x] = Number(value);
             if (!liveBoxMap[id])
                 delete liveBoxMap[id];  
         }

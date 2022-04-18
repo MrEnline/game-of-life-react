@@ -1,5 +1,5 @@
 export const initField = () => {
-    const _NUMBERS_FIELD = 20;
+    const _NUMBERS_FIELD = 30;
     let liveBoxMap = {};
     let liveBoxArr = [];
     let itemRefs = [];
