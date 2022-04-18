@@ -22,23 +22,4 @@ const Buttons = (props) => {
     )
 }
 
-// const Button = ({descButtons}) => {
-    
-//     const renderButtons = () => {
-
-//         const arrButtons = [];
-//         for(let i = 0; i < descButtons.length; i++) {
-//             arrButtons.push(<button className="button" >{descButtons[i]}</button>)
-//         }
-        
-//         return (arrButtons)
-//     }
-    
-//     const buttons = renderButtons();
-
-//     return(buttons)
-// }
-
-
-
 export default Buttons;

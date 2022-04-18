@@ -6,10 +6,10 @@ const Field = (props) => {
     return (
         <div className="field">
             <ViewBox runGame={props.runGame} 
-                    numbersField={props.numbersField} 
-                    getLiveBoxMap={props.getLiveBoxMap}
-                    getLiveBoxArr={props.getLiveBoxArr}
-                    getRefsBox={props.getRefsBox}/>
+                     numbersField={props.numbersField} 
+                     getLiveBoxMap={props.getLiveBoxMap}
+                     getLiveBoxArr={props.getLiveBoxArr}
+                     getRefsBox={props.getRefsBox}/>
         </div>
     );
 }

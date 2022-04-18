@@ -5,7 +5,6 @@ export const initField = () => {
     let itemRefs = [];
     
     const initArrDefaultValue = () => {
-        //1-й вариант - возврат матрицы состояний после первичной инициализации
         for (let i = 1; i <= _NUMBERS_FIELD; i++) {
             liveBoxArr[i] = [];
             for(let j = 1; j <= _NUMBERS_FIELD; j++){
