@@ -34,6 +34,7 @@ const ViewBox = ({runGame, numbersField, getLiveBoxMap, getLiveBoxArr, getRefsBo
                               </div>)
             }
         }
+        console.log("Перерендер");
         // if (Object.entries(itemRefs.current).length > 0)
         //     getRefsBox(itemRefs.current);
         // if (runGame)
