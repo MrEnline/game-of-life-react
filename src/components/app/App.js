@@ -2,9 +2,8 @@ import Field from '../field/Field'
 import Buttons from '../buttons/Buttons'
 import { useState } from "react";
 import {runNextStep} from '../../utils/RunNextStep';
-import {FIELD_SIZE, TIMEOUT} from '../../utils/Constants'
-
-let timerId;
+import {FIELD_SIZE, DELAY, BOX_SIZE} from '../../utils/Constants'
+import {useInterval} from '../hooks/useInterval'
 
 function App() {
     const [runGame, setRunGame] = useState(false);
@@ -12,26 +11,26 @@ function App() {
 
     const startGame = () => {
         setRunGame(!runGame);
-        if (!runGame) {
-            timerId = setInterval(() => {
-                nextStep();     
-            }, TIMEOUT);
-        }
-        if (runGame) {
-            clearInterval(timerId);
-        }
     }
 
     const handleChangeField = (coord) => {
         const newBox = {};
         newBox[coord] = !liveBoxMap[coord];
-        setLiveBoxMap({...liveBoxMap, ...newBox});
+        if (!newBox[coord]) {
+            const copyOfObject = {...liveBoxMap};
+            delete copyOfObject[coord];
+            setLiveBoxMap(copyOfObject); 
+        } else {
+            setLiveBoxMap({...liveBoxMap, ...newBox});  
+        }
     }
 
     const nextStep = () => {
         const newLiveBoxMap = runNextStep(FIELD_SIZE, Object.assign({}, liveBoxMap));
-        setLiveBoxMap(newLiveBoxMap);
+        setLiveBoxMap(newLiveBoxMap ? newLiveBoxMap : {});
     }
+
+    useInterval(nextStep, runGame ? DELAY : null);
 
     const clearField = () => {
         setLiveBoxMap({});
@@ -40,7 +39,8 @@ function App() {
     return (
         <div className="App">
             <Buttons runGame={runGame} startGame={startGame} nextStep={nextStep} clearField={clearField}/>
-            <Field numbersField={FIELD_SIZE}
+            <Field fieldSize={FIELD_SIZE}
+                    boxSize={BOX_SIZE}
                     runGame={runGame}
                     changeField={handleChangeField}
                     liveBoxMap={liveBoxMap}/>

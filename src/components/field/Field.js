@@ -3,10 +3,12 @@ import "./Field.scss"
 const Field = (props) => {
 
     const runGame = props.runGame;
-    const rows = props.numbersField.rows;
-    const columns = props.numbersField.columns;
+    const rows = props.fieldSize.rows;
+    const columns = props.fieldSize.columns;
     const changeField = props.changeField;
-    const liveBoxMap = props.liveBoxMap;
+    const liveBoxMap = props.liveBoxMap ? props.liveBoxMap : {};
+    const boxSize = props.boxSize;
+    const widthBoard = columns * boxSize;
 
     const generateField = () => {
         const arrItems = [];
@@ -14,8 +16,9 @@ const Field = (props) => {
             for(let j = 1; j <= rows; j++){
                 const boxColor = liveBoxMap[`${i}_${j}`] ? "box-color" : "";
                 arrItems.push(<div className={`box ${boxColor}`}
-                                data-xy={`${i}_${j}`}
-                                onClick={() => changeBackgroundColor(`${i}_${j}`)}>
+                                    key={`${(i - 1) * columns + j}`}
+                                    data-xy={`${i}_${j}`}
+                                    onClick={() => changeBackgroundColor(`${i}_${j}`)}>
                               </div>)
             }   
         }
@@ -31,7 +34,7 @@ const Field = (props) => {
     const items = generateField();
     
     return (
-        <div className="field">
+        <div className="field" style={{'width' : widthBoard}}>
             {items}
         </div>
     );

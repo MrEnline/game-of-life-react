@@ -1,2 +1,3 @@
-export const FIELD_SIZE = {rows: 30, columns: 30};
-export const TIMEOUT = 700;
+export const FIELD_SIZE = {rows: 20, columns: 20};
+export const DELAY = 700;
+export const BOX_SIZE = 20;
