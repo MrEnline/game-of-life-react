@@ -28,7 +28,7 @@ function App() {
 
     const nextStep = () => {
         const newLiveBoxMap = runNextStep(FIELD_SIZE, Object.assign({}, liveBoxMap));
-        setLiveBoxMap(newLiveBoxMap ? newLiveBoxMap : {});
+        setLiveBoxMap(newLiveBoxMap ? newLiveBoxMap : randomInit(false));
     }
 
     useInterval(nextStep, runGame ? DELAY : null);
@@ -43,7 +43,11 @@ function App() {
 
     return (
         <div className="App">
-            <Buttons runGame={runGame} startGame={startGame} nextStep={nextStep} randomField={randomField} clearField={clearField}/>
+            <Buttons runGame={runGame} 
+                    startGame={startGame} 
+                    nextStep={nextStep} 
+                    randomField={randomField} 
+                    clearField={clearField}/>
             <Field fieldSize={FIELD_SIZE}
                     boxSize={BOX_SIZE}
                     runGame={runGame}
