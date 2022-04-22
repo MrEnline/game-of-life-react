@@ -2,7 +2,7 @@ import Field from '../field/Field'
 import Buttons from '../buttons/Buttons'
 import { useState } from "react";
 import {runNextStep} from '../../utils/RunNextStep';
-import {FIELD_SIZE, DELAY, BOX_SIZE} from '../../utils/Constants'
+import {DELAY} from '../../utils/Constants'
 import {useInterval} from '../hooks/useInterval'
 import {randomInit} from '../../utils/RandomInit';
 
@@ -27,7 +27,7 @@ function App() {
     }
 
     const nextStep = () => {
-        const newLiveBoxMap = runNextStep(FIELD_SIZE, Object.assign({}, liveBoxMap));
+        const newLiveBoxMap = runNextStep(Object.assign({}, liveBoxMap));
         setLiveBoxMap(newLiveBoxMap ? newLiveBoxMap : randomInit(false));
     }
 
@@ -48,10 +48,8 @@ function App() {
                     nextStep={nextStep} 
                     randomField={randomField} 
                     clearField={clearField}/>
-            <Field fieldSize={FIELD_SIZE}
-                    boxSize={BOX_SIZE}
-                    runGame={runGame}
-                    changeField={handleChangeField}
+            <Field runGame={runGame}
+                    onChangeField={handleChangeField}
                     liveBoxMap={liveBoxMap}/>
         </div>
     );

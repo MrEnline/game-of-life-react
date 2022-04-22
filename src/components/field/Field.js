@@ -1,22 +1,15 @@
 import "./Field.scss"
+import classNames from "classnames";
+import {FIELD_SIZE, BOX_SIZE} from '../../utils/Constants'
 
-const Field = (props) => {
-
-    const runGame = props.runGame;
-    const rows = props.fieldSize.rows;
-    const columns = props.fieldSize.columns;
-    const changeField = props.changeField;
-    const liveBoxMap = props.liveBoxMap ? props.liveBoxMap : {};
-    const boxSize = props.boxSize;
-    const widthBoard = columns * boxSize;
+const Field = ({runGame, liveBoxMap, onChangeField}) => {
 
     const generateField = () => {
         const arrItems = [];
-        for (let i = 1; i <= columns; i++) {
-            for(let j = 1; j <= rows; j++){
-                const boxColor = liveBoxMap[`${i}_${j}`] ? "box-color" : "";
-                arrItems.push(<div className={`box ${boxColor}`}
-                                    key={`${(i - 1) * columns + j}`}
+        for (let i = 1; i <= FIELD_SIZE.columns; i++) {
+            for(let j = 1; j <= FIELD_SIZE.rows; j++){
+                arrItems.push(<div className={classNames('box', {'box-color': liveBoxMap[`${i}_${j}`]})}
+                                    key={`${(i - 1) * FIELD_SIZE.columns + j}`}
                                     data-xy={`${i}_${j}`}
                                     onClick={() => changeBackgroundColor(`${i}_${j}`)}>
                               </div>)
@@ -27,14 +20,14 @@ const Field = (props) => {
 
     const changeBackgroundColor = (id) => {
         if (!runGame) {
-            changeField(id);
+            onChangeField(id);
         }
     }
 
     const items = generateField();
     
     return (
-        <div className="field" style={{'width' : widthBoard}}>
+        <div className="field" style={{'width' : FIELD_SIZE.columns * BOX_SIZE}}>
             {items}
         </div>
     );
