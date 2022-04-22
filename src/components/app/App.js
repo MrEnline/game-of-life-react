@@ -1,76 +1,56 @@
 import Field from '../field/Field'
 import Buttons from '../buttons/Buttons'
-import {initField} from '../../utils/InitField';
-import { useState, useEffect, useMemo } from "react";
-import {runNextStep} from '..//../utils/RunNextStep';
+import { useState } from "react";
+import {runNextStep} from '../../utils/RunNextStep';
+import {DELAY} from '../../utils/Constants'
+import {useInterval} from '../hooks/useInterval'
+import {randomInit} from '../../utils/RandomInit';
 
 function App() {
-    const {liveBoxMap, liveBoxArr, getNumberField} = initField();
-    let itemRefs;
-    const [stateGame, setStateGame] = useState(false);
-    //const [liveBoxArr, setLiveBoxArr] = useState(initArrDefaultValue());
+    const [runGame, setRunGame] = useState(false);
+    const [liveBoxMap, setLiveBoxMap] = useState(randomInit(false));
 
     const startGame = () => {
-        setStateGame(!stateGame);
+        setRunGame(!runGame);
+    }
+
+    const handleChangeField = (coord) => {
+        const newBox = {};
+        newBox[coord] = !liveBoxMap[coord];
+        if (!newBox[coord]) {
+            const copyOfObject = {...liveBoxMap};
+            delete copyOfObject[coord];
+            setLiveBoxMap(copyOfObject); 
+        } else {
+            setLiveBoxMap({...liveBoxMap, ...newBox});  
+        }
     }
 
     const nextStep = () => {
-        const _liveBoxArr = getLiveBoxArr;
-        const _liveBoxMap = getLiveBoxMap;
-        //const _itemRefs = getItemRefs;
-        if (stateGame)
-            runNextStep(_liveBoxArr, _liveBoxMap, itemRefs);
+        const newLiveBoxMap = runNextStep(Object.assign({}, liveBoxMap));
+        setLiveBoxMap(newLiveBoxMap ? newLiveBoxMap : randomInit(false));
     }
 
-    // useEffect(() => {
-    //     //liveBoxArr = Init(_NUMBERS_FIELD);
-    //     //testFunc();
-    //     itemRefs = initField().itemRefs;
-    // }, []);
+    useInterval(nextStep, runGame ? DELAY : null);
 
-    const getLiveBoxMap = useMemo(() => {
-        return liveBoxMap;
-    }, []);
-
-    const getLiveBoxArr = useMemo(() => {
-        return liveBoxArr;
-    }, []);
-
-    // const getItemRefs = useMemo(() => {
-    //     return itemRefs;
-    // }, []);
-
-    const setStateBoxArr = (liveBoxXY, id) => {
-        const Y = id.split("_")[0];
-        const X = id.split("_")[1];
-        const value = Number(liveBoxXY[id]);
-        const _liveBoxArr = getLiveBoxArr;
-        _liveBoxArr[Y][X] = value;
-        //console.log(initArrDefaultValue);
-        // if (value)
-        //     liveBoxMap[id] = value;
-        // else
-        //     delete liveBoxMap[id];    
+    const clearField = () => {
+        setLiveBoxMap(randomInit(false));
     }
 
-    const getRefsBox = (_itemRefs) => {
-        //console.log(itemRefs.current);
-        itemRefs = _itemRefs;
-        
-        //itemRefs.current["1_1"].classList.toggle("box-color");
+    const randomField = () => {
+        setLiveBoxMap(randomInit(true));
     }
-
-    const numberField = getNumberField();
 
     return (
         <div className="App">
-            <Buttons runGame={stateGame} startGame={startGame} nextStep={nextStep}/>
-            <Field numbersField={numberField}
-                    setStateBoxArr={setStateBoxArr}
-                    runGame={stateGame}
-                    getLiveBoxMap={getLiveBoxMap}
-                    getLiveBoxArr={getLiveBoxArr}
-                    getRefsBox={getRefsBox}/>
+            <Buttons runGame={runGame} 
+                    startGame={startGame} 
+                    nextStep={nextStep} 
+                    randomField={randomField} 
+                    clearField={clearField}/>
+            <Field runGame={runGame}
+                    onChangeField={handleChangeField}
+                    liveBoxMap={liveBoxMap}/>
         </div>
     );
 }

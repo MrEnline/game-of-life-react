@@ -1,68 +1,36 @@
-import { useEffect, useRef } from "react";
 import "./Field.scss"
+import classNames from "classnames";
+import {FIELD_SIZE, BOX_SIZE} from '../../utils/Constants'
 
-const Field = (props) => {
-
-    return (
-        <div className="field">
-            <ViewBox runGame={props.runGame} 
-                    numbersField={props.numbersField} 
-                    setStateBoxArr={props.setStateBoxArr}
-                    getLiveBoxMap={props.getLiveBoxMap}
-                    getLiveBoxArr={props.getLiveBoxArr}
-                    getRefsBox={props.getRefsBox}/>
-        </div>
-    );
-}
-
-const ViewBox = ({runGame, numbersField, setStateBoxArr, getLiveBoxMap, getLiveBoxArr, getRefsBox}) => {
-    
-    const itemRefs = useRef([]);
-
-    useEffect(() => {
-        getRefsBox(itemRefs.current);
-    }, []);
+const Field = ({runGame, liveBoxMap, onChangeField}) => {
 
     const generateField = () => {
-        console.log("generateField");
         const arrItems = [];
-        for (let i = 1; i <= numbersField; i++) {
-            for(let j = 1; j <= numbersField; j++){
-                arrItems.push(<div className="box"
-                                    data-xy={i.toString() + "_" + j.toString()}
-                                    onClick={() => changeBackgroundColor(i.toString() + "_" + j.toString())}
-                                    ref={el => itemRefs.current[i.toString() + "_" + j.toString()] = el}>
+        for (let i = 1; i <= FIELD_SIZE.columns; i++) {
+            for(let j = 1; j <= FIELD_SIZE.rows; j++){
+                arrItems.push(<div className={classNames('box', {'box-color': liveBoxMap[`${i}_${j}`]})}
+                                    key={`${(i - 1) * FIELD_SIZE.columns + j}`}
+                                    data-xy={`${i}_${j}`}
+                                    onClick={() => changeBackgroundColor(`${i}_${j}`)}>
                               </div>)
-            }
+            }   
         }
-        if (Object.entries(itemRefs.current).length > 0)
-            getRefsBox(itemRefs.current);
-        return (arrItems)
+        return (arrItems);
     }
 
     const changeBackgroundColor = (id) => {
-        const liveBoxXY = getLiveBoxMap;
-        const liveBoxArr = getLiveBoxArr;
         if (!runGame) {
-            itemRefs.current[id].classList.toggle("box-color");
-            liveBoxXY[id] = !liveBoxXY[id];
-            const Y = id.split("_")[0];
-            const X = id.split("_")[1];
-            const value = Number(liveBoxXY[id]);
-            liveBoxArr[Y][X] = value;
-            //setStateBoxArr(liveBoxXY, id);
-            if (!liveBoxXY[id])
-                delete liveBoxXY[id];  
+            onChangeField(id);
         }
     }
 
     const items = generateField();
-
-    return(
-        <>
+    
+    return (
+        <div className="field" style={{'width' : FIELD_SIZE.columns * BOX_SIZE}}>
             {items}
-        </>
-    )
+        </div>
+    );
 }
 
 export default Field;
