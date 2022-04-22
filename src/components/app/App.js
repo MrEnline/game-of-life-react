@@ -4,10 +4,11 @@ import { useState } from "react";
 import {runNextStep} from '../../utils/RunNextStep';
 import {FIELD_SIZE, DELAY, BOX_SIZE} from '../../utils/Constants'
 import {useInterval} from '../hooks/useInterval'
+import {randomInit} from '../../utils/RandomInit';
 
 function App() {
     const [runGame, setRunGame] = useState(false);
-    const [liveBoxMap, setLiveBoxMap] = useState({});
+    const [liveBoxMap, setLiveBoxMap] = useState(randomInit(false));
 
     const startGame = () => {
         setRunGame(!runGame);
@@ -33,12 +34,16 @@ function App() {
     useInterval(nextStep, runGame ? DELAY : null);
 
     const clearField = () => {
-        setLiveBoxMap({});
+        setLiveBoxMap(randomInit(false));
+    }
+
+    const randomField = () => {
+        setLiveBoxMap(randomInit(true));
     }
 
     return (
         <div className="App">
-            <Buttons runGame={runGame} startGame={startGame} nextStep={nextStep} clearField={clearField}/>
+            <Buttons runGame={runGame} startGame={startGame} nextStep={nextStep} randomField={randomField} clearField={clearField}/>
             <Field fieldSize={FIELD_SIZE}
                     boxSize={BOX_SIZE}
                     runGame={runGame}

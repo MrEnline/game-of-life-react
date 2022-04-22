@@ -1,3 +1,3 @@
-export const FIELD_SIZE = {rows: 20, columns: 20};
+export const FIELD_SIZE = {rows: 40, columns: 40};
 export const DELAY = 700;
 export const BOX_SIZE = 20;
