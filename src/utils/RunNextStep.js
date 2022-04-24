@@ -12,31 +12,13 @@ export const runNextStep = (liveBoxMap) => {
         return liveBoxMap;
     }
 
-    //соберем всех соседей, включая живую клетку в общий массив
-    //1-й вариант через for
-    // for(let i = 0; i < coordLiveBoxArr.length; i++) {
-    //     const coord = parseCoordinates(coordLiveBoxArr[i]);
-    //     allArrNeighbors = [...allArrNeighbors, ...getNeighbors(coord)];
-    // }
-
-    //2-й вариант через reduce
     allNeighborsArr = coordLiveBoxArr.reduce((allNeighbors, coordBox) => {
         allNeighbors = [...allNeighbors, ...getNeighbors(parseCoordinates(coordBox))];
         return allNeighbors;
     }, []);
 
     allNeighborsArr = [...new Set(allNeighborsArr)];  //избавимся от всех повторяющихся клеток
-    //1-й вариант через for
-    // for (let i = 0; i < allNeighborsArr.length; i++) {
-    //     const coord = parseCoordinates(allNeighborsArr[i]);
-    //     const arrNeighbors = getNeighbors(coord);
-    //     const sum = sumLiveBox(arrNeighbors.slice(1), liveBoxMap);
-    //     if (!liveBoxMap[allNeighborsArr[i]] && sum === NEW_LIVE_BOX || 
-    //         liveBoxMap[allNeighborsArr[i]] && (sum === NEW_LIVE_BOX || sum === LIVE_BOX)) {
-    //         newLiveBoxMap[allNeighborsArr[i]] = true;
-    //     }
-    // }
-    //2-й вариант через reduce
+
     newLiveBoxMap = allNeighborsArr.reduce((allLiveBoxMap, coordBox) => {
         const arrNeighbors = getNeighbors(parseCoordinates(coordBox));
         const sum = sumLiveBox(arrNeighbors.slice(1), liveBoxMap);
@@ -63,7 +45,6 @@ const parseCoordinates = (xy) => {
     return { x, y };
 };
 
-//вернем список соседей живой клетки, включая саму живую клетку
 const getNeighbors = (coord, sizeBoard) => {
     
     const x = Number(coord.x);

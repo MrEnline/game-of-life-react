@@ -10,18 +10,6 @@ function App() {
     const [runGame, setRunGame] = useState(false);
     const [liveBoxMap, setLiveBoxMap] = useState(initField(false));
 
-    // const handleChangeField = useCallback((coord) => {
-    //     const newBox = {};
-    //     newBox[coord] = !liveBoxMap[coord];
-    //     if (!newBox[coord]) {
-    //         const copyOfObject = {...liveBoxMap};
-    //         delete copyOfObject[coord];
-    //         setLiveBoxMap(copyOfObject); 
-    //     } else {
-    //         setLiveBoxMap({...liveBoxMap, ...newBox});  
-    //     }
-    // })
-
     const handleNextStep = useCallback(() => {
         setLiveBoxMap(runNextStep(liveBoxMap));
     })
