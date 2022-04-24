@@ -1,53 +1,60 @@
 import {FIELD_SIZE} from '../utils/Constants'
+const NEW_LIVE_BOX = 3;
+const LIVE_BOX = 2;
 
 export const runNextStep = (liveBoxMap) => {
 
-    let keysLiveBox = Object.keys(liveBoxMap);
-    if (keysLiveBox.length === 0) {
-        return;
+    let newLiveBoxMap = {};
+    let allNeighborsArr = [];
+    const coordLiveBoxArr = Object.keys(liveBoxMap);
+    
+    if (coordLiveBoxArr.length === 0) {
+        return liveBoxMap;
     }
 
-    let allNeighbors = [];
-    for (let i = 0; i < keysLiveBox.length; i++) {
-        const sumNeighbors = getSumNeighbors(keysLiveBox[i], FIELD_SIZE, keysLiveBox);
-        allNeighbors = [...allNeighbors, ...sumNeighbors.currNeighbors];
-        if (sumNeighbors.result < 2 || sumNeighbors.result > 3) {
-            liveBoxMap[keysLiveBox[i]] = false;
+    //соберем всех соседей, включая живую клетку в общий массив
+    //1-й вариант через for
+    // for(let i = 0; i < coordLiveBoxArr.length; i++) {
+    //     const coord = parseCoordinates(coordLiveBoxArr[i]);
+    //     allArrNeighbors = [...allArrNeighbors, ...getNeighbors(coord)];
+    // }
+
+    //2-й вариант через reduce
+    allNeighborsArr = coordLiveBoxArr.reduce((allNeighbors, coordBox) => {
+        allNeighbors = [...allNeighbors, ...getNeighbors(parseCoordinates(coordBox))];
+        return allNeighbors;
+    }, []);
+
+    allNeighborsArr = [...new Set(allNeighborsArr)];  //избавимся от всех повторяющихся клеток
+    //1-й вариант через for
+    // for (let i = 0; i < allNeighborsArr.length; i++) {
+    //     const coord = parseCoordinates(allNeighborsArr[i]);
+    //     const arrNeighbors = getNeighbors(coord);
+    //     const sum = sumLiveBox(arrNeighbors.slice(1), liveBoxMap);
+    //     if (!liveBoxMap[allNeighborsArr[i]] && sum === NEW_LIVE_BOX || 
+    //         liveBoxMap[allNeighborsArr[i]] && (sum === NEW_LIVE_BOX || sum === LIVE_BOX)) {
+    //         newLiveBoxMap[allNeighborsArr[i]] = true;
+    //     }
+    // }
+    //2-й вариант через reduce
+    newLiveBoxMap = allNeighborsArr.reduce((allLiveBoxMap, coordBox) => {
+        const arrNeighbors = getNeighbors(parseCoordinates(coordBox));
+        const sum = sumLiveBox(arrNeighbors.slice(1), liveBoxMap);
+        if (!liveBoxMap[coordBox] && sum === NEW_LIVE_BOX || 
+            liveBoxMap[coordBox] && (sum === NEW_LIVE_BOX || sum === LIVE_BOX)) {
+                allLiveBoxMap[coordBox] = true;
         }
-    }
+        return allLiveBoxMap;
+    }, {});
 
-    allNeighbors = [...new Set(allNeighbors)];
-    for (let i = 0; i < allNeighbors.length; i++) {
-        if (keysLiveBox.includes(allNeighbors[i])) continue;
-        const sumNeighbors = getSumNeighbors(allNeighbors[i], FIELD_SIZE, keysLiveBox);
-        if (sumNeighbors.result === 3) {
-            liveBoxMap[allNeighbors[i]] = true;
-        }
-    }
-
-    keysLiveBox = Object.keys(liveBoxMap);
-    for (let i = 0; i < keysLiveBox.length; i++) {
-        if (!liveBoxMap[keysLiveBox[i]]) {
-            delete liveBoxMap[keysLiveBox[i]];
-        }
-    }
-
-    return liveBoxMap;
+    return newLiveBoxMap;
 };
 
-const getSumNeighbors = (xy, sizeBoard, keysLiveBox) => {
-    const coord = parseCoordinates(xy);
-    const currNeighbors = getNeighbors(coord, sizeBoard);
-    const result = sumLiveBox(currNeighbors, keysLiveBox);
-    return {currNeighbors, result};
-}
-
-const sumLiveBox = (arrNeighbors, keysLiveBox) => {
-    let sum = 0;
-    arrNeighbors.forEach((value) => {
-        sum = keysLiveBox.includes(value) ? sum + 1 : sum;
-    });
-    return sum;
+const sumLiveBox = (arrNeighbors, liveBoxMap) => {
+    return arrNeighbors.reduce((sum, coordBox) => {
+        sum = liveBoxMap[coordBox] ? sum + 1 : sum;
+        return sum
+    }, 0);
 };
 
 const parseCoordinates = (xy) => {
@@ -56,90 +63,26 @@ const parseCoordinates = (xy) => {
     return { x, y };
 };
 
+//вернем список соседей живой клетки, включая саму живую клетку
 const getNeighbors = (coord, sizeBoard) => {
-    let arrNeighbors = [];
-    let x = Number(coord.x);
-    let y = Number(coord.y);
-
-    if (x + 1 <= sizeBoard.rows) {
-        arrNeighbors.push(`${y}_${x + 1}`);       
-    } 
-    else {
-        arrNeighbors.push(`${y}_${1}`);          
-    }
-  
-    if (x + 1 <= sizeBoard.rows && y + 1 <= sizeBoard.columns) {
-        arrNeighbors.push(`${y + 1}_${x + 1}`);        
-    }
-    else if (x + 1 <= sizeBoard.rows && y + 1 > sizeBoard.columns) {
-        arrNeighbors.push(`${1}_${x + 1}`);        
-    }   
-    else if (x + 1 > sizeBoard.rows && y + 1 <= sizeBoard.columns) {
-        arrNeighbors.push(`${y + 1}_${1}`);       
-    }
-    else {
-        arrNeighbors.push(`${1}_${1}`);        
-    }
     
-    if (y + 1 <= sizeBoard.columns) {
-        arrNeighbors.push(`${y + 1}_${x}`);        
-    }
-    else {
-        arrNeighbors.push(`${1}_${x}`);        
-    }
+    const x = Number(coord.x);
+    const y = Number(coord.y);
 
-    if (x - 1 > 0 && y + 1 <= sizeBoard.columns) {
-        arrNeighbors.push(`${y + 1}_${x - 1}`);        
-    }
-    else if (x - 1 > 0 && y + 1 > sizeBoard.columns) {
-        arrNeighbors.push(`${1}_${x - 1}`);          
-    }
-    else if (x - 1 < 1 && y + 1 <= sizeBoard.columns) {
-        arrNeighbors.push(`${y + 1}_${sizeBoard.rows}`);        
-    } 
-    else {
-        arrNeighbors.push(`${1}_${sizeBoard.rows}`);        
-    }
+    const topCoord = y === 1 ? FIELD_SIZE.columns : y - 1;
+    const bottomCoord = y === FIELD_SIZE.columns ? 1 : y + 1;
+    const rightCoord = x === FIELD_SIZE.rows ? 1 : x + 1;
+    const leftCoord = x === 1 ? FIELD_SIZE.rows : x - 1;
 
-    if (x - 1 > 0) {
-        arrNeighbors.push(`${y}_${x - 1}`);        
-    }
-    else {
-        arrNeighbors.push(`${y}_${sizeBoard.rows}`);       
-    }
-
-    if (x - 1 > 0 && y - 1 > 0) {
-        arrNeighbors.push(`${y - 1}_${x - 1}`);        
-    }
-    else if(x - 1 < 1 && y - 1 > 0) {
-        arrNeighbors.push(`${y - 1}_${sizeBoard.rows}`);        
-    }
-    else if(x - 1 > 0 && y - 1 < 1) {
-        arrNeighbors.push(`${sizeBoard.columns}_${x - 1}`);        
-    }
-    else {
-        arrNeighbors.push(`${sizeBoard.columns}_${sizeBoard.rows}`);        
-    }
-
-    if (y - 1 > 0) {
-        arrNeighbors.push(`${y - 1}_${x}`);          
-    } 
-    else {
-        arrNeighbors.push(`${sizeBoard.columns}_${x}`);         
-    }
-
-    if (x + 1 <= sizeBoard.rows && y - 1 > 0) {
-        arrNeighbors.push(`${y - 1}_${x + 1}`);        
-    }
-    else if(x + 1 > sizeBoard.rows && y - 1 > 0) {
-        arrNeighbors.push(`${y - 1}_${1}`);        
-    }
-    else if(x + 1 <= sizeBoard.rows && y - 1 < 1) {
-        arrNeighbors.push(`${sizeBoard.columns}_${x + 1}`);        
-    }
-    else {
-        arrNeighbors.push(`${sizeBoard.columns}_${1}`);        
-    }
-
-    return arrNeighbors;
+    return [
+        `${y}_${x}`,
+        `${y}_${rightCoord}`,
+        `${bottomCoord}_${rightCoord}`,
+        `${bottomCoord}_${x}`,
+        `${bottomCoord}_${leftCoord}`,
+        `${y}_${leftCoord}`,
+        `${topCoord}_${leftCoord}`,
+        `${topCoord}_${x}`,
+        `${topCoord}_${rightCoord}`
+    ];
 };

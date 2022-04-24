@@ -1,5 +1,5 @@
-import {FIELD_SIZE} from '../utils/Constants'
-export const randomInit = (generateRandom) => {
+import {FIELD_SIZE} from './Constants'
+export const initField = (generateRandom) => {
     const liveBoxMap = {};
     if (!generateRandom) {
         return liveBoxMap;
