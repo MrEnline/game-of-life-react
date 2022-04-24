@@ -11,16 +11,22 @@ const Field = ({runGame, liveBoxMap, onChangeField}) => {
                 arrItems.push(<div className={classNames('box', {'box-color': liveBoxMap[`${i}_${j}`]})}
                                     key={`${(i - 1) * FIELD_SIZE.columns + j}`}
                                     data-xy={`${i}_${j}`}
-                                    onClick={() => changeBackgroundColor(`${i}_${j}`)}>
+                                    onClick={() => changeBackgroundColorBox(`${i}_${j}`)}>
                               </div>)
             }   
         }
         return (arrItems);
     }
 
-    const changeBackgroundColor = (id) => {
+    const changeBackgroundColorBox = (id) => {
+        let newLiveBoxMap = {...liveBoxMap};
         if (!runGame) {
-            onChangeField(id);
+            if (newLiveBoxMap[id]) {
+                delete newLiveBoxMap[id];
+            } else {
+                newLiveBoxMap[id] = true;
+            }
+            onChangeField(newLiveBoxMap);
         }
     }
 

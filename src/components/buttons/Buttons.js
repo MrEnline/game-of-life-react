@@ -1,14 +1,14 @@
 import "./Buttons.scss"
 
 const Buttons = (props) => {
-    const {runGame, startGame, nextStep, randomField, clearField} = props;
+    const {runGame, onStartGame, onNextStep, onRandomField, onClearField} = props;
 
     return (
         <div className="buttons">
-            <button className="button" onClick={startGame}>{runGame ? "Stop game" : "Start game"}</button>
-            <button className="button" onClick={nextStep} disabled={runGame}>Next step</button>
-            <button className="button" onClick={randomField} disabled={runGame}>Random game</button>
-            <button className="button" onClick={clearField} disabled={runGame}>Clear field</button>
+            <button className="button" onClick={() => onStartGame(!runGame)}>{runGame ? "Stop game" : "Start game"}</button>
+            <button className="button" onClick={onNextStep} disabled={runGame}>Next step</button>
+            <button className="button" onClick={onRandomField} disabled={runGame}>Random game</button>
+            <button className="button" onClick={onClearField} disabled={runGame}>Clear field</button>
         </div>
     )
 }
