@@ -20,9 +20,10 @@ function App() {
         setLiveCellObj(initField(false));
     });
 
-    const handleRandomField = useCallback(() => {
+    const handleRandomField = () => {
+        console.log("handleRandomField");
         setLiveCellObj(initField(true));
-    });
+    };
 
     return (
         <div className="App">
