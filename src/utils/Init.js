@@ -1,17 +1,17 @@
 import { FIELD_SIZE } from "./Constants";
 export const initField = (generateRandom) => {
-  const liveBoxMap = {};
-  if (!generateRandom) {
-    return liveBoxMap;
-  }
-
-  for (let i = 1; i < FIELD_SIZE.columns; i++) {
-    for (let j = 1; j < FIELD_SIZE.rows; j++) {
-      const rand = Boolean(Math.round(Math.random()));
-      if (rand) {
-        liveBoxMap[`${i}_${j}`] = rand;
-      }
+    const liveBoxMap = {};
+    if (!generateRandom) {
+        return liveBoxMap;
     }
-  }
-  return liveBoxMap;
+
+    for (let i = 1; i < FIELD_SIZE.columns; i++) {
+        for (let j = 1; j < FIELD_SIZE.rows; j++) {
+            const rand = Boolean(Math.round(Math.random()));
+            if (rand) {
+                liveBoxMap[`${i}_${j}`] = rand;
+            }
+        }
+    }
+    return liveBoxMap;
 };

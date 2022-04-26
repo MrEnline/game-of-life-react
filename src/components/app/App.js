@@ -3,25 +3,25 @@ import Buttons from "../buttons/Buttons";
 import { useCallback, useState } from "react";
 import { runNextStep } from "../../utils/RunNextStep";
 import { DELAY } from "../../utils/Constants";
-import { useInterval } from "../hooks/useInterval";
+import { useInterval } from "../../hooks/useInterval";
 import { initField } from "../../utils/Init";
 
 function App() {
     const [runGame, setRunGame] = useState(false);
-    const [liveBoxMap, setLiveBoxMap] = useState(initField(false));
+    const [liveCellObj, setLiveCellObj] = useState(initField(false));
 
     const handleNextStep = useCallback(() => {
-        setLiveBoxMap(runNextStep(liveBoxMap));
+        setLiveCellObj(runNextStep(liveCellObj));
     });
 
     useInterval(handleNextStep, runGame ? DELAY : null);
 
     const handleClearField = useCallback(() => {
-        setLiveBoxMap(initField(false));
+        setLiveCellObj(initField(false));
     });
 
     const handleRandomField = useCallback(() => {
-        setLiveBoxMap(initField(true));
+        setLiveCellObj(initField(true));
     });
 
     return (
@@ -35,8 +35,8 @@ function App() {
             />
             <Field
                 runGame={runGame}
-                onChangeField={setLiveBoxMap}
-                liveBoxMap={liveBoxMap}
+                onChangeField={setLiveCellObj}
+                liveCellObj={liveCellObj}
             />
         </div>
     );

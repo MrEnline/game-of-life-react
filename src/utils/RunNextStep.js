@@ -1,38 +1,37 @@
 import { FIELD_SIZE } from "../utils/Constants";
-const NEW_LIVE_BOX = [3];
-const LIVE_BOX = [2, 3];
+const NEW_LIVE_CELL = [3];
+const LIVE_CELL = [2, 3];
 
-export const runNextStep = (liveBoxMap) => {
-    const coordLiveBoxArr = Object.keys(liveBoxMap);
+export const runNextStep = (liveCellObj) => {
+    const coordLiveCellArr = Object.keys(liveCellObj);
 
-    if (coordLiveBoxArr.length === 0) {
-        return liveBoxMap;
+    if (coordLiveCellArr.length === 0) {
+        return liveCellObj;
     }
 
-    let allNeighborsArr = coordLiveBoxArr.reduce((allNeighbors, coordBox) => {
-        return [...allNeighbors, ...getNeighbors(parseCoordinates(coordBox))];
+    let allNeighborsArr = coordLiveCellArr.reduce((allNeighbors, coord) => {
+        return [...allNeighbors, ...getNeighbors(parseCoordinates(coord))];
     }, []);
 
     allNeighborsArr = [...new Set(allNeighborsArr)];
 
-    let newLiveBoxMap = allNeighborsArr.reduce((allLiveBoxMap, coordBox) => {
-        const arrNeighbors = getNeighbors(parseCoordinates(coordBox));
-        const sum = sumLiveBox(arrNeighbors.slice(1), liveBoxMap);
+    let newLiveCellObj = allNeighborsArr.reduce((allLiveCellObj, coord) => {
+        const arrNeighbors = getNeighbors(parseCoordinates(coord));
+        const sum = sumLiveBox(arrNeighbors.slice(1), liveCellObj);
         if (
-            (!liveBoxMap[coordBox] && NEW_LIVE_BOX.includes(sum)) ||
-            (liveBoxMap[coordBox] && LIVE_BOX.includes(sum))
+            (!liveCellObj[coord] && NEW_LIVE_CELL.includes(sum)) ||
+            (liveCellObj[coord] && LIVE_CELL.includes(sum))
         ) {
-            allLiveBoxMap[coordBox] = true;
+            allLiveCellObj[coord] = true;
         }
-        return allLiveBoxMap;
+        return allLiveCellObj;
     }, {});
-
-    return newLiveBoxMap;
+    return newLiveCellObj;
 };
 
-const sumLiveBox = (arrNeighbors, liveBoxMap) => {
-    return arrNeighbors.reduce((sum, coordBox) => {
-        return liveBoxMap[coordBox] ? sum + 1 : sum;
+const sumLiveBox = (arrNeighbors, liveCellObj) => {
+    return arrNeighbors.reduce((sum, coord) => {
+        return liveCellObj[coord] ? sum + 1 : sum;
     }, 0);
 };
 
@@ -42,7 +41,7 @@ const parseCoordinates = (xy) => {
     return { x, y };
 };
 
-const getNeighbors = (coord, sizeBoard) => {
+const getNeighbors = (coord) => {
     const x = Number(coord.x);
     const y = Number(coord.y);
 
