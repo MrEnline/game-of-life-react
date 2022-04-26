@@ -21,9 +21,9 @@ const Field = ({ runGame, liveCellObj, onChangeField }) => {
         return arrItems;
     };
 
-    const changeStateCell = (e) => {
-        let newLiveCellObj = { ...liveCellObj };
-        const id = e.target.dataset.xy;
+    const changeStateCell = (event) => {
+        const newLiveCellObj = { ...liveCellObj };
+        const id = event.target.dataset.xy;
         if (runGame) {
             return;
         }
@@ -37,7 +37,7 @@ const Field = ({ runGame, liveCellObj, onChangeField }) => {
 
     return (
         <div
-            onClick={(e) => changeStateCell(e)}
+            onClick={(event) => changeStateCell(event)}
             className={styles.field}
             style={{ width: FIELD_SIZE.columns * BOX_SIZE }}
         >

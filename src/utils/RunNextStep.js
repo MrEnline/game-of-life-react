@@ -15,7 +15,7 @@ export const runNextStep = (liveCellObj) => {
 
     allNeighborsArr = [...new Set(allNeighborsArr)];
 
-    let newLiveCellObj = allNeighborsArr.reduce((allLiveCellObj, coord) => {
+    const newLiveCellObj = allNeighborsArr.reduce((allLiveCellObj, coord) => {
         const arrNeighbors = getNeighbors(parseCoordinates(coord));
         const sum = sumLiveBox(arrNeighbors.slice(1), liveCellObj);
         if (
